@@ -1,0 +1,14 @@
+{
+  "name": "Event-App",
+  "version": "1.0.0",
+  "description": "Graphql API for creating and managing events",
+  "main": "index.js",
+  "repository": "https://gitlab.com/Hbbolaji/event-graphql-app.git",
+  "author": "Hashim Bolaji Bello",
+  "license": "MIT",
+  "dependencies": {
+    "apollo-server": "^2.21.0",
+    "graphql": "^15.5.0",
+    "mongoose": "^5.11.16"
+  }
+}
