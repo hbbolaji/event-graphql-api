@@ -23,6 +23,8 @@ const typeDefs = gql`
   }
   type Mutation {
     createEvent(eventInput: EventInput): Event!
+    deleteEvent(id: ID): String
+    updateEvent(id: ID newEvent: EventInput): Event!
   }
 `
 module.exports = typeDefs

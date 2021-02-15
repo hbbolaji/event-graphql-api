@@ -5,7 +5,7 @@ const resolvers = {
   Query: {
     events: async() => {
       try {
-        const events = await Event.find()
+        const events = await Event.find().sort({name: 1})
        return events
       } catch (err) {
         throw new Error(err)
@@ -13,10 +13,9 @@ const resolvers = {
     }
   },
   Mutation: {
-    createEvent: async(parents, {eventInput}) => {
+    createEvent: async(_, {eventInput}) => {
       try {
         const {valid, error} = eventValidator(eventInput)
-        console.log({valid, error})
         if (valid) {
           const newEvent = new Event(eventInput)
           const result = await newEvent.save()
@@ -28,6 +27,27 @@ const resolvers = {
           throw new UserInputError('Empty field', {
             errors: error
           })
+        }
+      } catch(err) {
+        throw new Error(err)
+      }
+    },
+    deleteEvent: async(_, {id}) => {
+      try {
+        await Event.findByIdAndRemove(id, {
+          useFindAndModify: false
+        })
+        return 'Event is Deleted!'
+      } catch(err) {
+        throw new Error(err)
+      }
+    },
+    updateEvent: async(_, {id, newEvent} ) => {
+      try {
+        await Event.findByIdAndUpdate(id, newEvent)
+        
+        return {
+          id, ...newEvent
         }
       } catch(err) {
         throw new Error(err)
