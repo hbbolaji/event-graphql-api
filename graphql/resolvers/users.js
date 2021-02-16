@@ -6,13 +6,6 @@ const User = require('../../models/user')
 const {validateUserInput} = require('../../utils/userValidation')
 const {secret} = require('../../utils/config')
 
-const dummy = {
-  username: "hashim",
-  email: 'hashim@contact.com',
-  createdAt: 'thursday',
-  token: 'token'
-}
-
 module.exports = {
   Mutation: {
     createUser: async(_, {userInput}) => {
@@ -56,6 +49,41 @@ module.exports = {
           }
         } else {
           throw new UserInputError('Invalid Input', {errors})
+        }
+      } catch(err) {
+        throw new Error(err)
+      }
+    },
+    loginUser: async(_, {email, password}) => {
+      try {
+        const user = await User.findOne({email})
+        if(user) {
+          const confirmPassword = await bcrypt.compare(password, user.password)
+          if (confirmPassword) {
+            const token = jwt.sign({
+              username: user.username,
+              email: user.email,
+              id: user._id,
+            }, secret, {expiresIn: '1h'})
+            return {
+              username: user.username,
+              email: user.email,
+              id: user._id,
+              token
+            }
+          }else {
+            throw new UserInputError('Incorrect password', {
+              errors: {
+                message: 'Incorrect Password'
+              }
+            })
+          }
+        } else {
+          throw new UserInputError('User not found', {
+            errors: {
+              message: 'This email is not registered to any account'
+            }
+          })
         }
       } catch(err) {
         throw new Error(err)

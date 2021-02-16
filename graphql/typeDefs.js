@@ -37,7 +37,8 @@ const typeDefs = gql`
     createEvent(eventInput: EventInput): Event!
     deleteEvent(id: ID): String
     updateEvent(id: ID newEvent: EventInput): Event!
-    createUser(userInput: UserInput): User
+    createUser(userInput: UserInput): User!
+    loginUser(email: String!, password: String!): User!
   }
 `
 module.exports = typeDefs
