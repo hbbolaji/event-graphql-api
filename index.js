@@ -8,7 +8,11 @@ const {port} = require('./utils/config')
 connection()
 
 
-const server = new ApolloServer({typeDefs, resolvers})
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: ({req}) => ({req})
+})
 server.listen(port).then(res => {
   console.log(`server is running at ${res.url}`)
 })

@@ -1,6 +1,7 @@
-const {UserInputError} = require('apollo-server')
+const {UserInputError, AuthenticationError} = require('apollo-server')
 const Event = require('../../models/event')
 const eventValidator = require('../../utils/eventInputValidator')
+const checkAuth = require('../../utils/checkAuth')
 const resolvers = {
   Query: {
     events: async() => {
@@ -13,8 +14,16 @@ const resolvers = {
     }
   },
   Mutation: {
-    createEvent: async(_, {eventInput}) => {
+    createEvent: async(_, {eventInput}, context) => {
       try {
+        const user = checkAuth(context)
+        if (!user) {
+          throw new AuthenticationError('Invalid or expired token', {
+            errors: {
+              message: 'you are not logged in'
+            }
+          })
+        }
         const {valid, error} = eventValidator(eventInput)
         if (valid) {
           const newEvent = new Event(eventInput)
