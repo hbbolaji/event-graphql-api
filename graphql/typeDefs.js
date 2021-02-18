@@ -32,6 +32,7 @@ const typeDefs = gql`
   }
   type Query {
     events: [Event!]
+    event(id: ID!): Event!
   }
   type Mutation {
     createEvent(eventInput: EventInput): Event!

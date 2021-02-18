@@ -11,6 +11,14 @@ const resolvers = {
       } catch (err) {
         throw new Error(err)
       }
+    },
+    event: async(_, {id}) => {
+      try {
+        const event = await Event.findById(id)
+        return event
+      } catch (err) {
+        throw new Error(err)
+      }
     }
   },
   Mutation: {
